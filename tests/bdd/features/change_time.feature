@@ -8,14 +8,18 @@ Feature: Change entry times in journal
         When we run "jrnl -1"
         Then the output should contain "2020-09-24 09:14 The third entry finally"
         When we run "jrnl -1 --change-time '2022-04-23 10:30'" and enter
+            """
             Y
+            """
         Then the error output should contain "1 entry modified"
         And the error output should not contain "deleted"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2022-04-23 10:30 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file          |
@@ -29,20 +33,26 @@ Feature: Change entry times in journal
         And we use the password "test" if prompted
         When we run "jrnl --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
+            """
         When we run "jrnl --change-time '2022-04-23 10:30'" and enter
+            """
             Y
             N
             Y
+            """
         Then the error output should contain "3 entries found"
         And the error output should contain "2 entries modified"
         When we run "jrnl --short"
         Then the output should be
+            """
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2022-04-23 10:30 Entry the first.
             2022-04-23 10:30 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file          |
@@ -58,14 +68,18 @@ Feature: Change entry times in journal
         When we run "jrnl -1"
         Then the output should contain "2020-09-24 09:14 The third entry finally"
         When we run "jrnl -1 --change-time '2023-02-21 10:30'" and enter
+            """
             N
+            """
         Then the error output should not contain "modified"
         And the error output should not contain "deleted"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file          |
@@ -83,9 +97,11 @@ Feature: Change entry times in journal
         And the error output should not contain "entries deleted"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file           |
@@ -99,14 +115,18 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30' @ipsum" and enter
+            """
             Y
+            """
         Then the error output should contain "1 entry found"
         And the error output should contain "1 entry modified"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
             2022-04-23 10:30 Entry the first.
+            """
 
         Examples: Configs
         | config_file           |
@@ -120,13 +140,17 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30'  @ipsum @tagthree" and enter
+            """
             Y
             Y
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2022-04-23 10:30 Entry the first.
             2022-04-23 10:30 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file           |
@@ -140,12 +164,16 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30' -and @tagone @tagtwo" and enter
+            """
             Y
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
             2022-04-23 10:30 Entry the first.
+            """
 
         Examples: Configs
         | config_file           |
@@ -159,12 +187,16 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30' @tagone -not @ipsum" and enter
+            """
             Y
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2022-04-23 10:30 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file           |
@@ -178,12 +210,16 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30' -from 2020-09-01" and enter
+            """
             Y
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2022-04-23 10:30 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file           |
@@ -197,13 +233,17 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30' -to 2020-08-31" and enter
+            """
             Y
             Y
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-09-24 09:14 The third entry finally after weeks without writing.
             2022-04-23 10:30 Entry the first.
             2022-04-23 10:30 A second entry in what I hope to be a long series.
+            """
 
         Examples: Configs
         | config_file           |
@@ -217,12 +257,16 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30' -starred" and enter
+            """
             Y
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-09-24 09:14 The third entry finally after weeks without writing.
             2022-04-23 10:30 A second entry in what I hope to be a long series.
+            """
 
         Examples: Configs
         | config_file           |
@@ -236,13 +280,17 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time '2022-04-23 10:30'  -contains dignissim" and enter
+            """
             Y
+            """
         Then the error output should contain "1 entry modified"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
             2022-04-23 10:30 Entry the first.
+            """
 
         Examples: Configs
         | config_file           |
@@ -256,14 +304,18 @@ Feature: Change entry times in journal
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --change-time" and enter
+            """
             N
             N
             N
+            """
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2020-08-29 11:11 Entry the first.
             2020-08-31 14:32 A second entry in what I hope to be a long series.
             2020-09-24 09:14 The third entry finally after weeks without writing.
+            """
 
         Examples: Configs
         | config_file           |

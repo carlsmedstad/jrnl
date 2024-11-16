@@ -7,8 +7,10 @@ Feature: Multiple journals
         Given we use the config "multiple.yaml"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
         When we run "jrnl work -99 --short"
         Then the output should be empty
 
@@ -17,10 +19,14 @@ Feature: Multiple journals
         When we run "jrnl this goes to default"
         When we run "jrnl -99 --short"
         Then the output should contain
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
         Then the output should contain
+            """
             this goes to default
+            """
         When we run "jrnl work -99 --short"
         Then the output should be empty
 
@@ -29,8 +35,10 @@ Feature: Multiple journals
         When we run "jrnl work a long day in the office"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
         When we run "jrnl work -99 --short"
         Then the output should contain "a long day in the office"
 
@@ -44,32 +52,44 @@ Feature: Multiple journals
         When we run "jrnl work 23 july 2012: a long day in the office"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
         When we run "jrnl work -99 --short"
         Then the output should be
+            """
             2012-07-23 09:00 a long day in the office
+            """
 
     Scenario: Write to specified journal without a timestamp but with colon
         Given we use the config "multiple.yaml"
         When we run "jrnl work : a long day in the office"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
         When we run "jrnl work -99 --short"
         Then the output should be contain
+            """
             a long day in the office
+            """
 
     Scenario: Write to specified journal without a timestamp but with colon
         Given we use the config "multiple.yaml"
         When we run "jrnl work: a long day in the office"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
         When we run "jrnl work -99 --short"
         Then the output should contain
+            """
             a long day in the office
+            """
 
    Scenario: Create new journals as required
         Given we use the config "multiple.yaml"
@@ -77,7 +97,9 @@ Feature: Multiple journals
         When we run "jrnl ideas 23 july 2012: sell my junk on ebay and make lots of money"
         When we run "jrnl ideas -99 --short"
         Then the output should be
+            """
             2012-07-23 09:00 sell my junk on ebay and make lots of money
+            """
 
    Scenario: Don't crash if no default journal is specified
         Given we use the config "no_default_journal.yaml"
@@ -87,9 +109,11 @@ Feature: Multiple journals
    Scenario: Don't crash if no file exists for a configured encrypted journal
         Given we use the config "multiple.yaml"
         When we run "jrnl new_encrypted Adding first entry" and enter
+            """
             these three eyes
             these three eyes
             n
+            """
         Then the output should contain "Journal 'new_encrypted' created at"
 
    Scenario: Read and write to journal with emoji name

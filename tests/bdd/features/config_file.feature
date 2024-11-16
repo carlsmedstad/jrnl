@@ -73,18 +73,22 @@ Feature: Multiple journals
         Given the config "multiple.yaml" exists
         And we use the config "basic_onefile.yaml"
         When we run "jrnl new_encrypted --cf multiple.yaml Adding first entry" and enter
+            """
             these three eyes
             these three eyes
             n
+            """
         Then the output should contain "Journal 'new_encrypted' created at "
 
     Scenario: Don't overwrite main config when encrypting a journal in an alternate config
         Given the config "basic_onefile.yaml" exists
         And we use the config "multiple.yaml"
         When we run "jrnl --cf basic_onefile.yaml --encrypt" and enter
+            """
             these three eyes
             these three eyes
             n
+            """
         Then the output should contain "Journal encrypted to features/journals/basic_onefile.journal"
         And the config should contain "encrypt: false"
 
@@ -122,7 +126,7 @@ Feature: Multiple journals
         And we use the config "duplicate_keys.yaml"
         When we run "jrnl -1"
         Then the output should contain "There is at least one duplicate key in your configuration file"
-    
+
     Scenario: Show a warning message when using --config-file with duplicate keys
         Given the config "duplicate_keys.yaml" exists
         And we use the config "multiple.yaml"

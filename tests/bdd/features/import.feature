@@ -21,6 +21,7 @@ Feature: Importing data
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --import" and pipe
+            """
             [2020-07-05 15:00] Observe and import.
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent malesuada quis
             est ac dignissim. Aliquam dignissim rutrum pretium. Phasellus pellentesque augue
@@ -28,6 +29,7 @@ Feature: Importing data
             Aenean ante ex, elementum ut interdum et, mattis eget lacus. In commodo nulla nec
             tellus placerat, sed ultricies metus bibendum. Duis eget venenatis erat. In at
             dolor dui end of entry.
+            """
         When we run "jrnl -on 2020-07-05"
         Then the output should contain "2020-07-05 15:00 Observe and import."
         And the output should contain "Lorem ipsum"
@@ -44,11 +46,13 @@ Feature: Importing data
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         When we run "jrnl --import" and pipe
+            """
             [2020-07-05 15:00] Observe and import.
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
             [2020-07-05 15:01] Twice as nice.
             Sed dignissim sed nisl eu consequat.
+            """
         When we run "jrnl -on 2020-07-05"
         Then the output should contain "2020-07-05 15:00 Observe and import."
         And the output should contain "Lorem ipsum"
@@ -83,7 +87,9 @@ Feature: Importing data
         But the output should not contain "I have an @idea"
         And the output should not contain "I met with"
         When we run "jrnl --import --file features/journals/tags.journal" and pipe
+            """
             [2020-07-05 15:00] I should not exist!
+            """
         And we run "jrnl -99"
         Then the output should contain "My first entry."
         And the output should contain "PROFIT!"

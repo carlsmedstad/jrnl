@@ -8,7 +8,9 @@ Feature: Journals iteracting with the file system in a way that users can see
         When we run "jrnl 23 July 2013: Testing folder journal."
         Then we should get no error
         And the journal directory should contain
+            """
             2013/07/23.txt
+            """
 
     Scenario: Adding multiple entries to a Folder journal should generate multiple date files
         Given we use the config "empty_folder.yaml"
@@ -16,7 +18,9 @@ Feature: Journals iteracting with the file system in a way that users can see
         And we run "jrnl 3/7/2014: Second entry of journal."
         Then we should get no error
         And the journal directory should contain
+            """
             2013/07/23.txt
+            """
 
     Scenario: If the journal and its parent directory don't exist, they should be created
         Given we use the config "missing_directory.yaml"
@@ -33,7 +37,7 @@ Feature: Journals iteracting with the file system in a way that users can see
         Then the journal should exist
         When we run "jrnl -99 --short"
         Then the output should contain "This is a new entry in my journal"
-    
+
     @on_posix
     Scenario: If the directory for a Folder journal ending in a slash ('/') doesn't exist, then it should be created
         Given we use the config "missing_directory.yaml"
@@ -55,9 +59,11 @@ Feature: Journals iteracting with the file system in a way that users can see
     Scenario: Creating journal with relative path should update to absolute path
         Given we use no config
         When we run "jrnl hello world" and enter
+            """
             test.txt
             n
             \n
+            """
         Then the output should contain "Journal 'default' created"
         When we change directory to "subfolder"
         And we run "jrnl -n 1"

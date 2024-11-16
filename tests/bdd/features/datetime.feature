@@ -27,11 +27,13 @@ Feature: Reading and writing to journal with custom date formats
         Then we should get no error
         When we run "jrnl -n 999"
         Then the output should be
+            """
             09.06.2013 15:39 My first entry.
             | Everything is alright
 
             10.07.2013 15:40 Life is good.
             | But I'm better.
+            """
 
 
     Scenario Outline: Writing an entry from command line with custom date
@@ -142,9 +144,11 @@ Feature: Reading and writing to journal with custom date formats
         Given we use the config "mostlyreadabledates.yaml"
         When we run "jrnl --short"
         Then the output should be
+            """
             2019-07-01 14:23 The third entry
             2019-07-18 14:23 The first entry
             2019-07-19 14:23 The second entry
+            """
 
 
     Scenario: Update near-valid dates after journal is edited
@@ -175,7 +179,9 @@ Feature: Reading and writing to journal with custom date formats
         When we run "jrnl -1"
         Then we should get no error
         And the output should be
+            """
             2013-10-27 04:27 Some text.
+            """
 
 
     @skip #1422

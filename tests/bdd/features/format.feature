@@ -40,10 +40,12 @@ Feature: Custom formats
         Given we parse the output as JSON
         Then "entries" in the parsed output should have 3 elements
         And "tags" in the parsed output should be
+            """
             @ipsum
             @tagone
             @tagtwo
             @tagthree
+            """
         And "entries.0.tags" in the parsed output should have 3 elements
         And "entries.1.tags" in the parsed output should have 1 elements
         And "entries.2.tags" in the parsed output should have 2 elements
@@ -62,7 +64,9 @@ Feature: Custom formats
         And the output should be valid JSON
         Given we parse the output as JSON
         Then "entries.0.uuid" in the parsed output should be
+            """
             4BB1F46946AD439996C9B59DE7C4DDC1
+            """
 
     Scenario Outline: Printing a journal that has multiline entries with tags
         Given we use the config "<config_file>"
@@ -70,6 +74,7 @@ Feature: Custom formats
         When we run "jrnl -n 1 @ipsum"
         Then we should get no error
         And the output should be
+            """
             2020-08-29 11:11 Entry the first.
             | Lorem @ipsum dolor sit amet, consectetur adipiscing elit. Praesent malesuada
             | quis est ac dignissim. Aliquam dignissim rutrum pretium. Phasellus 
@@ -90,6 +95,7 @@ Feature: Custom formats
             | velit scelerisque fringilla. Phasellus pharetra justo et nulla fringilla, ac
             | porta sapien accumsan. Class aptent taciti sociosqu ad litora torquent per
             | conubia nostra, per inceptos himenaeos.
+            """
 
         Examples: configs
         | config_file          |
@@ -108,9 +114,11 @@ Feature: Custom formats
         Given we parse the output as JSON
         Then "entries" in the parsed output should have 2 elements
         And "tags" in the parsed output should be
+            """
             @ipsum
             @tagone
             @tagtwo
+            """
         And "entries.0.tags" in the parsed output should have 3 elements
         And "entries.1.tags" in the parsed output should have 1 elements
 
@@ -125,6 +133,7 @@ Feature: Custom formats
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         Given we append to the editor if opened
+            """
             [2021-10-14 13:23] Heading Test
 
             H1-1
@@ -167,10 +176,12 @@ Feature: Custom formats
 
             More stuff
             more stuff again
+            """
         When we run "jrnl --edit -1"
         Then the editor should have been called
         When we run "jrnl -1 --export markdown"
         Then the output should be
+            """
             # 2021
 
             ## October
@@ -211,6 +222,7 @@ Feature: Custom formats
 
             More stuff
             more stuff again
+            """
 
         Examples: configs
         | config_file          |
@@ -227,10 +239,12 @@ Feature: Custom formats
         Then the output should be a valid XML string
         And "entries" in the xml output should have 3 elements
         And "tags" in the xml output should contain
+            """
             @ipsum
             @tagone
             @tagtwo
             @tagthree
+            """
         And there should be 10 "tag" elements
 
         Examples: configs
@@ -248,9 +262,11 @@ Feature: Custom formats
         Given we parse the output as XML
         Then "entries" in the parsed output should have 2 elements
         And "tags" in the parsed output should be
+            """
             @idea
             @journal
             @dan
+            """
         And there should be 7 "tag" elements
 
     Scenario Outline: Exporting tags
@@ -258,10 +274,12 @@ Feature: Custom formats
         And we use the password "test" if prompted
         When we run "jrnl --export tags"
         Then the output should be
+            """
             @tagtwo              : 2
             @tagone              : 2
             @tagthree            : 1
             @ipsum               : 1
+            """
 
         Examples: configs
         | config_file          |
@@ -293,6 +311,7 @@ Feature: Custom formats
         And we use the password "test" if prompted
         When we run "jrnl --export fancy"
         Then the output should be
+            """
             ┎──────────────────────────────────────────────────────────────╮2020-08-29 11:11
             ┃ Entry the first.                                             ╘═══════════════╕
             ┠╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
@@ -375,6 +394,7 @@ Feature: Custom formats
             ┃ Phasellus aliquam lacus placerat convallis vestibulum. Curabitur maximus at  │
             ┃ ante eget fringilla. @tagthree and also @tagone                              │
             ┖──────────────────────────────────────────────────────────────────────────────┘
+            """
 
         Examples: configs
         | config_file          |
@@ -390,11 +410,14 @@ Feature: Custom formats
         And we create a cache directory
         When we run "jrnl --format yaml --file {cache_dir}"
         Then the cache directory should contain the files
+            """
             2020-08-29_entry-the-first.md
             2020-08-31_a-second-entry-in-what-i-hope-to-be-a-long-series.md
             2020-09-24_the-third-entry-finally-after-weeks-without-writing.md
+            """
 
         And the content of file "2020-08-29_entry-the-first.md" in the cache should be
+            """
             ---
             title: Entry the first.
             date: 2020-08-29 11:11
@@ -420,7 +443,8 @@ Feature: Custom formats
                 porta sapien accumsan. Class aptent taciti sociosqu ad litora torquent per
                 conubia nostra, per inceptos himenaeos.        
             ...
-            
+            """
+
         Examples: configs
         | config_file          |
         | basic_onefile.yaml   |
@@ -451,10 +475,13 @@ Feature: Custom formats
         And we create a cache directory
         When we run "jrnl --export yaml -o {cache_dir}"
         Then the cache should contain the files
+            """
             2020-08-29_entry-the-first.md
             2020-08-31_a-second-entry-in-what-i-hope-to-be-a-long-series.md
             2020-09-24_the-third-entry-finally-after-weeks-without-writing.md
+            """
         And the content of file "2020-09-24_the-third-entry-finally-after-weeks-without-writing.md" in the cache should be
+            """
             ---
             title: The third entry finally after weeks without writing.
             date: 2020-09-24 09:14
@@ -472,6 +499,7 @@ Feature: Custom formats
                 Phasellus aliquam lacus placerat convallis vestibulum. Curabitur maximus at
                 ante eget fringilla. @tagthree and also @tagone        
             ...
+            """
 
         Examples: configs
         | config_file          |
@@ -516,6 +544,7 @@ Feature: Custom formats
         Given we use the config "format_md.yaml"
         When we run "jrnl -n 1"
         Then the output should be
+            """
             # 2013
 
             ## June
@@ -523,13 +552,16 @@ Feature: Custom formats
             ### 2013-06-10 15:40 Life is good.
 
             But I'm better.
+            """
 
     Scenario: Text Formatter from config file
         Given we use the config "format_text.yaml"
         When we run "jrnl -n 1"
         Then the output should be
+            """
             [2013-06-10 15:40] Life is good.
             But I'm better.
+            """
 
     Scenario Outline: Exporting entries with Cyrillic characters to directory should not fail
         Given we use the config "<config_file>"
@@ -538,7 +570,9 @@ Feature: Custom formats
         When we run "jrnl 2020-11-21: Первая"
         When we run "jrnl --format md --file {cache_dir} -on 2020-11-21"
         Then the cache should contain the files
+            """
             2020-11-21_первая.md
+            """
 
         Examples: configs
         | config_file          |
@@ -553,9 +587,11 @@ Feature: Custom formats
         When we run "jrnl 2020-08-31 01:01: Hi."
         And we run "jrnl --format dates"
         Then the output should be
+            """
             2020-08-29, 1
             2020-08-31, 2
             2020-09-24, 1
+            """
 
         Examples: configs
         | config_file          |
@@ -571,7 +607,7 @@ Feature: Custom formats
         When we run "jrnl --config-override display_format short -1"
         Then we should get no error
         When we run "jrnl --config-override display_format pretty -1"
-        Then we should get no error            
+        Then we should get no error
 
         Examples: configs
         | config_file          |
@@ -588,7 +624,7 @@ Feature: Custom formats
         When we run "jrnl --format markdown --file {cache_dir}"
         Then the cache directory should contain 5 files
         And we should get no error
-    
+
     Scenario: Export entries in text format with a title longer than max file name length.
         Given we use the config "basic_onefile.yaml"
         And we create a cache directory
@@ -602,30 +638,42 @@ Feature: Custom formats
         Given we use the config "basic_onefile.yaml"
         When we run "jrnl --list"
         Then the output should match
+            """
             Journals defined in config \(.+basic_onefile\.yaml\)
              \* default -> features/journals/basic_onefile\.journal
+            """
         When we run "jrnl --list --format json"
         Then the output should match
+            """
             {"config_path": ".+basic_onefile\.yaml", "journals": {"default": "features/journals/basic_onefile\.journal"}}
+            """
         When we run "jrnl --list --format yaml"
         Then the output should match
+            """
             config_path: .+basic_onefile\.yaml
             journals:
               default: features/journals/basic_onefile\.journal
+            """
 
     Scenario: Export journal list to formats with no default journal
         Given we use the config "no_default_journal.yaml"
         When we run "jrnl --list"
         Then the output should match
+            """
             Journals defined in config \(.+no_default_journal\.yaml\)
              \* simple -> features/journals/simple\.journal
              \* work   -> features/journals/work\.journal
+            """
         When we run "jrnl --list --format json"
         Then the output should match
+            """
             {"config_path": ".+no_default_journal\.yaml", "journals": {"simple": "features/journals/simple\.journal", "work": "features/journals/work\.journal"}}
+            """
         When we run "jrnl --list --format yaml"
         Then the output should match
+            """
             config_path: .+no_default_journal\.yaml
             journals:
               simple: features/journals/simple\.journal
               work: features/journals/work\.journal
+            """

@@ -2,12 +2,13 @@
 # License: https://www.gnu.org/licenses/gpl-3.0.html
 
 Feature: Using templates
-
     Scenario Outline: Template contents should be used in new entry
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we append to the editor if opened
+            """
             This is an addition to a templated entry
+            """
         When we run "jrnl --config-override template features/templates/basic.template"
         And we run "jrnl -1"
         Then the output should contain "This text is in the basic template"

@@ -11,9 +11,11 @@ Feature: Tagging
         When we run "jrnl --tags -on 2020-09-26"
         Then we should get no error
         And the output should be
+            """
             @os/2                : 1
             @c++                 : 1
             @c#                  : 1
+            """
 
         Examples: configs
         | config_file        |
@@ -41,8 +43,10 @@ Feature: Tagging
         When we run "jrnl 2020-09-26: @foo came over, we went to a @bar"
         When we run "jrnl --tags -on 2020-09-26"
         Then the output should be
+            """
             @foo                 : 1
             @bar                 : 1
+            """
 
         Examples: configs
         | config_file        |

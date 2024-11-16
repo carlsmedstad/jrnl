@@ -11,8 +11,10 @@ Feature: Encrypting and decrypting journals
         And the config for journal "default" should contain "encrypt: false"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
 
 
     @todo
@@ -23,8 +25,10 @@ Feature: Encrypting and decrypting journals
         Then the config for journal "default" should contain "encrypt: false"
         When we run "jrnl -99 --short"
         Then the output should be
+            """
             2013-06-09 15:39 My first entry.
             2013-06-10 15:40 Life is good.
+            """
 
 
     Scenario: Trying to encrypt an already encrypted journal
@@ -36,9 +40,11 @@ Feature: Encrypting and decrypting journals
     Scenario Outline: Encrypting a journal
         Given we use the config "simple.yaml"
         When we run "jrnl --encrypt" and enter
+            """
             swordfish
             swordfish
             n
+            """
         Then we should get no error
         And the output should contain "Journal encrypted"
         And the config for journal "default" should contain "encrypt: true"
@@ -50,16 +56,20 @@ Feature: Encrypting and decrypting journals
         Given we use the config "simple.yaml"
         And we don't have a keyring
         When we run "jrnl --encrypt" and enter
+            """
             swordfish
             swordfish
             y
+            """
         Then we should get no error
         And the output should contain "Journal encrypted"
         When we run "jrnl --encrypt" and enter
+            """
             swordfish
             tuna
             tuna
             y
+            """
         Then we should get no error
         And the output should contain "Journal default is already encrypted. Create a new password."
         And we should be prompted for a password
@@ -69,15 +79,19 @@ Feature: Encrypting and decrypting journals
         Given we use the config "simple.yaml"
         And we have a keyring
         When we run "jrnl --encrypt" and enter
+            """
             swordfish
             swordfish
             y
+            """
         Then we should get no error
         And the output should contain "Journal encrypted"
         When we run "jrnl --encrypt" and enter
+            """
             tuna
             tuna
             y
+            """
         Then we should get no error
         And the output should contain "Journal default is already encrypted. Create a new password."
         And we should be prompted for a password

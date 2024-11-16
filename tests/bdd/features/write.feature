@@ -67,7 +67,9 @@ Feature: Writing new entries.
         Then we should get no error
         Then the editor should have been called
         And the editor file content should be
+            """
             this is a partial
+            """
 
         Examples: configs
         | config_file          |
@@ -146,8 +148,10 @@ Feature: Writing new entries.
         Then we should get no error
         When we run "jrnl -1"
         Then the output should be
+            """
             2014-04-24 09:00 Created a new website - empty.com.
             | Hope to get a lot of traffic.
+            """
 
         Examples: configs
         | config_file       |
@@ -206,13 +210,17 @@ Feature: Writing new entries.
         Given we parse the output as JSON
         Then "entries" in the parsed output should have 5 elements
         And "entries.0.creator" in the parsed output should be
+            """
             software_agent
             os_agent
             host_name
             generation_date
             device_agent
+            """
         And "entries.0.creator.software_agent" in the parsed output should contain
+            """
             jrnl
+            """
 
     Scenario: Title with an embedded period on DayOne journal
         Given we use the config "dayone.yaml"
@@ -220,8 +228,10 @@ Feature: Writing new entries.
         Then we should get no error
         When we run "jrnl -1"
         Then the output should be
+            """
             2014-04-24 09:00 Ran 6.2 miles today in 1:02:03.
             | I am feeling sore because I forgot to stretch.
+            """
 
     Scenario: Opening an folder that's not a DayOne folder should treat as folder journal
         Given we use the config "empty_folder.yaml"
@@ -234,7 +244,9 @@ Feature: Writing new entries.
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we append to the editor if opened
+            """
             [2021-11-13] worked on jrnl tests
+            """
         When we run "jrnl --edit"
         Then the error output should contain "3 entries found"
         And the error output should contain "1 entry added"
@@ -252,9 +264,11 @@ Feature: Writing new entries.
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we append to the editor if opened
+            """
             [2021-11-11] worked on jrnl tests
             [2021-11-12] worked on jrnl tests again
             [2021-11-13] worked on jrnl tests a little bit more
+            """
         When we run "jrnl --edit"
         Then the error output should contain "3 entries found"
         And the error output should contain "3 entries added"
@@ -271,7 +285,9 @@ Feature: Writing new entries.
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we write to the editor if opened
+            """
             [2021-11-13] I am replacing my whole journal with this entry
+            """
         When we run "jrnl --edit"
         Then the output should contain "2 entries deleted"
         And the output should contain "1 entry modified"
@@ -288,7 +304,9 @@ Feature: Writing new entries.
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we write to the editor if opened
+            """
             [2021-11-13] I am replacing the last entry with this entry
+            """
         When we run "jrnl --edit -1"
         Then the error output should contain "1 entry modified"
 
@@ -304,7 +322,9 @@ Feature: Writing new entries.
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we append to the editor if opened
+            """
             This is a small addendum to my latest entry.
+            """
         When we run "jrnl --edit"
         Then the error output should contain "3 entries found"
         And the error output should contain "1 entry modified"
@@ -341,12 +361,16 @@ Feature: Writing new entries.
         Given we use the config "<config_file>"
         And we use the password "test" if prompted
         And we append to the editor if opened
+            """
             @newtag
+            """
         When we run "jrnl --edit -1"
         Then the error output should contain "1 entry modified"
         When we run "jrnl --tags @newtag"
         Then the output should contain
+            """
             1 entry found
+            """
 
         Examples: configs
         | config_file          |
