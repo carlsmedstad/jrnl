@@ -8,6 +8,7 @@ from xml.etree import ElementTree as ET
 
 from pytest_bdd import then
 from pytest_bdd.parsers import parse
+from pytest_bdd.parsers import re as pytest_bdd_parsers_re
 from ruamel.yaml import YAML
 
 from jrnl.config import scope_config
@@ -30,7 +31,11 @@ def should_get_an_error(cli_run):
     assert cli_run["status"] != 0, cli_run["status"]
 
 
-@then(parse("the output should match\n{regex}"))
+@then(parse("the output should match"))
+def output_should_match_docstring(cli_run, docstring):
+    output_should_match(docstring, cli_run)
+
+
 @then(parse('the output should match "{regex}"'))
 def output_should_match(regex, cli_run):
     out = cli_run["stdout"]
@@ -38,14 +43,18 @@ def output_should_match(regex, cli_run):
     assert matches, f"\nRegex didn't match:\n{regex}\n{str(out)}\n{str(matches)}"
 
 
-@then(parse("the output {it_should:Should} contain\n{expected}", SHOULD_DICT))
-@then(parse('the output {it_should:Should} contain "{expected}"', SHOULD_DICT))
+@then(parse("the output {it_should:Should} contain", SHOULD_DICT))
 @then(
     parse(
-        "the {which_output_stream} output {it_should:Should} contain\n{expected}",
+        "the {which_output_stream} output {it_should:Should} contain",
         SHOULD_DICT,
     )
 )
+def output_should_contain_docstring(which_output_stream, cli_run, it_should, docstring):
+    output_should_contain(docstring, which_output_stream, cli_run, it_should)
+
+
+@then(parse('the output {it_should:Should} contain "{expected}"', SHOULD_DICT))
 @then(
     parse(
         'the {which_output_stream} output {it_should:Should} contain "{expected}"',
@@ -75,13 +84,21 @@ def output_should_contain(expected, which_output_stream, cli_run, it_should):
         assert (expected in cli_run[which_output_stream]) == it_should, output_str
 
 
-@then(parse("the output should not contain\n{expected_output}"))
+@then(parse("the output should not contain"))
+def output_should_not_contain_docstring(cli_run, docstring):
+    output_should_not_contain(docstring, cli_run)
+
+
 @then(parse('the output should not contain "{expected_output}"'))
 def output_should_not_contain(expected_output, cli_run):
     assert expected_output not in cli_run["stdout"]
 
 
-@then(parse("the output should be\n{expected_output}"))
+@then(parse("the output should be"))
+def output_should_be_docstring(cli_run, docstring):
+    output_should_be(docstring, cli_run)
+
+
 @then(parse('the output should be "{expected_output}"'))
 def output_should_be(expected_output, cli_run):
     actual = cli_run["stdout"].strip()
@@ -139,20 +156,23 @@ def default_journal_location(journal_file, journal_dir, config_on_disk, temp_dir
 
 @then(
     parse(
+        'the config for journal "{journal_name}" {it_should:Should} contain',
+        SHOULD_DICT,
+    )
+)
+@then(parse("the config {it_should:Should} contain", SHOULD_DICT))
+def config_var_on_disk_docstring(config_on_disk, journal_name, it_should, docstring):
+    config_var_on_disk(config_on_disk, journal_name, it_should, docstring)
+
+
+@then(
+    parse(
         'the config for journal "{journal_name}" '
         '{it_should:Should} contain "{some_yaml}"',
         SHOULD_DICT,
     )
 )
-@then(
-    parse(
-        'the config for journal "{journal_name}" '
-        "{it_should:Should} contain\n{some_yaml}",
-        SHOULD_DICT,
-    )
-)
 @then(parse('the config {it_should:Should} contain "{some_yaml}"', SHOULD_DICT))
-@then(parse("the config {it_should:Should} contain\n{some_yaml}", SHOULD_DICT))
 def config_var_on_disk(config_on_disk, journal_name, it_should, some_yaml):
     actual = config_on_disk
     if journal_name:
@@ -171,22 +191,26 @@ def config_var_on_disk(config_on_disk, journal_name, it_should, some_yaml):
 @then(
     parse(
         'the config in memory for journal "{journal_name}" '
+        "{it_should:Should} contain",
+        SHOULD_DICT,
+    )
+)
+@then(parse("the config in memory {it_should:Should} contain", SHOULD_DICT))
+def config_var_in_memory_docstring(
+    config_in_memory, journal_name, it_should, docstring
+):
+    config_var_in_memory(config_in_memory, journal_name, it_should, docstring)
+
+
+@then(
+    parse(
+        'the config in memory for journal "{journal_name}" '
         '{it_should:Should} contain "{some_yaml}"',
         SHOULD_DICT,
     )
 )
 @then(
-    parse(
-        'the config in memory for journal "{journal_name}" '
-        "{it_should:Should} contain\n{some_yaml}",
-        SHOULD_DICT,
-    )
-)
-@then(
     parse('the config in memory {it_should:Should} contain "{some_yaml}"', SHOULD_DICT)
-)
-@then(
-    parse("the config in memory {it_should:Should} contain\n{some_yaml}", SHOULD_DICT)
 )
 def config_var_in_memory(config_in_memory, journal_name, it_should, some_yaml):
     actual = config_in_memory["overrides"]
@@ -213,21 +237,23 @@ def password_was_not_called(cli_run):
     assert not cli_run["mocks"]["user_input"].return_value.input.called
 
 
-@then(parse("the cache directory should contain the files\n{file_list}"))
-def assert_dir_contains_files(file_list, cache_dir):
-    assert does_directory_contain_files(file_list, cache_dir["path"])
+@then(parse("the cache directory should contain the files"))
+def assert_dir_contains_files(cache_dir, docstring):
+    assert does_directory_contain_files(docstring, cache_dir["path"])
 
 
-@then(parse("the cache directory should contain {number} files"))
+@then(
+    pytest_bdd_parsers_re(r"the cache directory should contain (?P<number>\d+) files")
+)
 def assert_dir_contains_n_files(cache_dir, number):
     assert does_directory_contain_n_files(cache_dir["path"], number)
 
 
-@then(parse("the journal directory should contain\n{file_list}"))
-def journal_directory_should_contain(config_on_disk, file_list):
+@then(parse("the journal directory should contain"))
+def journal_directory_should_contain(config_on_disk, docstring):
     scoped_config = scope_config(config_on_disk, "default")
 
-    assert does_directory_contain_files(file_list, scoped_config["journal"])
+    assert does_directory_contain_files(docstring, scoped_config["journal"])
 
 
 @then(parse('journal "{journal_name}" should not exist'))
@@ -262,10 +288,10 @@ def directory_should_not_exist(config_on_disk, it_should, journal_name):
     assert dir_exists == it_should
 
 
-@then(parse('the content of file "{file_path}" in the cache should be\n{file_content}'))
-def content_of_file_should_be(file_path, file_content, cache_dir):
+@then(parse('the content of file "{file_path}" in the cache should be'))
+def content_of_file_should_be(file_path, cache_dir, docstring):
     assert cache_dir["exists"]
-    expected_content = file_content.strip().splitlines()
+    expected_content = docstring.strip().splitlines()
 
     with open(os.path.join(cache_dir["path"], file_path), "r") as f:
         actual_content = f.read().strip().splitlines()
@@ -282,12 +308,12 @@ def content_of_file_should_be(file_path, file_content, cache_dir):
             ]
 
 
-@then(parse("the cache should contain the files\n{file_list}"))
-def cache_dir_contains_files(file_list, cache_dir):
+@then(parse("the cache should contain the files"))
+def cache_dir_contains_files(cache_dir, docstring):
     assert cache_dir["exists"]
 
     actual_files = os.listdir(cache_dir["path"])
-    expected_files = file_list.split("\n")
+    expected_files = docstring.split("\n")
 
     # sort to deal with inconsistent default file ordering on different OS's
     actual_files.sort()
@@ -336,11 +362,11 @@ def assert_parsed_output_item_count(node_name, number, parsed_output):
         assert False, f"Language name {lang} not recognized"
 
 
-@then(parse('"{field_name}" in the parsed output should {comparison}\n{expected_keys}'))
-def assert_output_field_content(field_name, comparison, expected_keys, parsed_output):
+@then(parse('"{field_name}" in the parsed output should {comparison}'))
+def assert_output_field_content(field_name, comparison, parsed_output, docstring):
     lang = parsed_output["lang"]
     obj = parsed_output["obj"]
-    expected_keys = expected_keys.split("\n")
+    expected_keys = docstring.split("\n")
     if len(expected_keys) == 1:
         expected_keys = expected_keys[0]
 
@@ -420,9 +446,13 @@ def editor_filename_suffix(suffix, editor_state):
     assert editor_state["tmpfile"]["name"].endswith(suffix), (editor_filename, suffix)
 
 
+@then(parse("the editor file content should {comparison}"))
+def contains_editor_file_docstring(comparison, editor_state, docstring):
+    contains_editor_file(comparison, docstring, editor_state)
+
+
 @then(parse('the editor file content should {comparison} "{str_value}"'))
 @then(parse("the editor file content should {comparison} empty"))
-@then(parse("the editor file content should {comparison}\n{str_value}"))
 def contains_editor_file(comparison, str_value, editor_state):
     content = editor_state["tmpfile"]["content"]
     # content = f'\n"""\n{content}\n"""\n'

@@ -34,7 +34,11 @@ all_input = '("(?P<all_input>[^"]*)")'
 # an empty line of input internally for testing purposes.
 
 
-@when(parse('we run "jrnl {command}" and {input_method}\n{all_input}'))
+@when(re(f'we run "jrnl {command}" and {input_method}'))
+def we_run_jrnl_docstring(capsys, keyring, request, command, input_method, docstring):
+    we_run_jrnl(capsys, keyring, request, command, input_method, docstring)
+
+
 @when(re(f'we run "jrnl ?{command}" and {input_method} {all_input}'))
 @when(re(f'we run "jrnl {command}"(?! and)'))
 @when('we run "jrnl"')

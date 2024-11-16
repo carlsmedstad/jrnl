@@ -13,6 +13,7 @@ from xml.etree import ElementTree as ET
 
 from pytest_bdd import given
 from pytest_bdd.parsers import parse
+from pytest_bdd.parsers import re
 
 from jrnl import __version__
 from jrnl.time import __get_pdt_calendar
@@ -21,7 +22,11 @@ from tests.lib.fixtures import NoKeyring
 from tests.lib.fixtures import TestKeyring
 
 
-@given(parse("we {editor_method} to the editor if opened\n{editor_input}"))
+@given(re(r"we (?P<editor_method>\w+) to the editor if opened"))
+def we_enter_editor_docstring(editor_method, editor_state, docstring):
+    we_enter_editor(editor_method, docstring, editor_state)
+
+
 @given(parse("we {editor_method} nothing to the editor if opened"))
 def we_enter_editor(editor_method, editor_input, editor_state):
     file_method = editor_state["intent"]["method"]
