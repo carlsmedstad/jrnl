@@ -111,8 +111,8 @@ Feature: Test combinations of edit, change-time, and delete
             """
         Then the error output should contain "3 entries found"
         And the error output should contain "2 entries deleted"
-        And the error output should contain "1 entry modified" # only 1, because the other was deleted
-        And the error output should contain "1 entry added" # by edit
+        And the error output should contain "1 entry modified"
+        And the error output should contain "1 entry added"
         When we run "jrnl -99 --short"
         Then the output should be
             """

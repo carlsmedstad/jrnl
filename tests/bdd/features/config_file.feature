@@ -7,8 +7,8 @@ Feature: Multiple journals
         Given the config "basic_onefile.yaml" exists
         And we use the config "multiple.yaml"
         When we run "jrnl --cf basic_onefile.yaml -999"
-        Then the output should not contain "My first entry" # from multiple.yaml
-        And the output should contain "Lorem ipsum" # from basic_onefile.yaml
+        Then the output should not contain "My first entry"
+        And the output should contain "Lorem ipsum"
 
     Scenario: Write to default journal by default using an alternate config
         Given the config "multiple.yaml" exists
